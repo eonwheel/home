@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Virtual Product Assembler</title>
+    <title>AetherSim | Anyone can simulate</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -25,10 +25,13 @@
         <!-- Header -->
         <header class="p-4 bg-slate-900/80 backdrop-blur-md border-b border-slate-700 pointer-events-auto flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                 </div>
-                <h1 class="text-xl font-bold tracking-tight">V-Assemble <span class="text-blue-400 font-normal text-sm">Pro Sim</span></h1>
+                <div class="flex flex-col">
+                    <h1 class="text-xl font-bold tracking-tight leading-none text-white">AetherSim</h1>
+                    <p class="text-[11px] text-blue-400 font-medium tracking-wide mt-0.5 italic">Anyone can simulate</p>
+                </div>
             </div>
             <div class="flex items-center space-x-4">
                 <button id="resetBtn" class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition">Clear All</button>
@@ -100,7 +103,7 @@
                 <div id="loading" class="absolute inset-0 bg-slate-900 flex items-center justify-center z-50">
                     <div class="text-center">
                         <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
-                        <p class="text-slate-400 animate-pulse">Initializing Environment...</p>
+                        <p class="text-slate-400 animate-pulse">Initializing AetherSim...</p>
                     </div>
                 </div>
                 
@@ -246,7 +249,6 @@
                         const blade = new THREE.Mesh(bladeGeo, bladeMat);
                         
                         blade.position.y = 1.2;
-                        // ADDING AERODYNAMIC PITCH: Rotate on Y axis to angle the blade
                         blade.rotation.y = 0.45; 
                         
                         bladePivot.add(blade);
@@ -374,7 +376,6 @@
             requestAnimationFrame(animate);
             if (state.controls) state.controls.update();
 
-            // Turbine rotation logic: ONLY rotate when simulation is running
             const turbineSpeed = state.isSimulationRunning ? 0.2 : 0;
             state.objects.energyItems.forEach(item => {
                 if (item.userData.isTurbine) {
@@ -383,7 +384,6 @@
             });
 
             if (state.isSimulationRunning) {
-                // Vehicle simulation logic
                 if (state.objects.frame && state.objects.wheels.length >= 2) {
                     state.simSpeed = Math.min(state.simSpeed + 0.005, 0.15);
                     state.objects.frame.position.x += state.simSpeed;
