@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Virtual Product Assembler</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        body { margin: 0; overflow: hidden; font-family: 'Inter', sans-serif; background: #0f172a; color: white; }
+        canvas { display: block; }
+        .component-card:hover { transform: translateY(-2px); transition: all 0.2s; }
+        .drop-target-active { border: 2px dashed #3b82f6; background: rgba(59, 130, 246, 0.1); }
+        #toast-container { position: fixed; bottom: 1rem; right: 1rem; z-index: 100; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <!-- UI Overlay -->
+    <div class="absolute inset-0 pointer-events-none flex flex-col">
+        <!-- Header -->
+        <header class="p-4 bg-slate-900/80 backdrop-blur-md border-b border-slate-700 pointer-events-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                </div>
+                <h1 class="text-xl font-bold tracking-tight">V-Assemble <span class="text-blue-400 font-normal text-sm">Pro Sim</span></h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="resetBtn" class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition">Clear All</button>
+                <button id="runBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-full font-bold shadow-lg shadow-blue-900/20 transition flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M4.5 3a.5.5 0 00-.5.5v13a.5.5 0 00.81.39l11-6.5a.5.5 0 000-.78l-11-6.5a.5.5 0 00-.31-.11z"></path></svg>
+                    <span>Run Simulation</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-1 flex overflow-hidden">
+            <!-- Left Side Pane -->
+            <aside class="w-72 bg-slate-900/95 backdrop-blur-md border-r border-slate-700 p-4 pointer-events-auto flex flex-col">
+                
+                <div class="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+                    <!-- CAR GROUP -->
+                    <section class="mb-6">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <span class="p-1 bg-blue-500/20 rounded text-blue-400">
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path><path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v7.05a2.5 2.5 0 014.9 0H18a1 1 0 001-1V8a1 1 0 00-1-1h-4z"></path></svg>
+                            </span>
+                            <h2 class="text-xs font-bold text-slate-300 uppercase tracking-widest">Car Assembly</h2>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <div draggable="true" data-type="frame" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-blue-500 transition">
+                                <p class="font-medium text-[13px]">Main Chassis Frame</p>
+                            </div>
+                            <div draggable="true" data-type="wheel" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-emerald-500 transition">
+                                <p class="font-medium text-[13px]">Traction Wheel</p>
+                            </div>
+                            <div draggable="true" data-type="motor" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-orange-500 transition">
+                                <p class="font-medium text-[13px]">Brushless Motor</p>
+                            </div>
+                            <div draggable="true" data-type="battery" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-purple-500 transition">
+                                <p class="font-medium text-[13px]">Lithium Battery</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ENERGY GROUP -->
+                    <section class="mb-6">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <span class="p-1 bg-yellow-500/20 rounded text-yellow-400">
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path></svg>
+                            </span>
+                            <h2 class="text-xs font-bold text-slate-300 uppercase tracking-widest">Energy Systems</h2>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <div draggable="true" data-type="wind_turbine" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-cyan-500 transition">
+                                <p class="font-medium text-[13px]">Wind Turbine</p>
+                            </div>
+                            <div draggable="true" data-type="solar_panel" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-yellow-500 transition">
+                                <p class="font-medium text-[13px]">Solar Array</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="mt-auto pt-4 border-t border-slate-700">
+                    <p class="text-[10px] text-slate-500 uppercase tracking-tighter">Pro Tip</p>
+                    <p class="text-xs text-slate-400 mt-1 italic">Simulation can be run with any components present on the grid.</p>
+                </div>
+            </aside>
+
+            <!-- Main Graphics Area -->
+            <main id="container" class="flex-1 relative pointer-events-auto">
+                <div id="loading" class="absolute inset-0 bg-slate-900 flex items-center justify-center z-50">
+                    <div class="text-center">
+                        <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
+                        <p class="text-slate-400 animate-pulse">Initializing Environment...</p>
+                    </div>
+                </div>
+                
+                <!-- Assembly Stats Overlay -->
+                <div class="absolute top-4 left-4 bg-slate-900/60 backdrop-blur-sm p-3 rounded-lg border border-slate-700 text-xs text-slate-300">
+                    <div class="flex justify-between space-x-8">
+                        <span>Total Power Output:</span>
+                        <span id="powerValue" class="text-cyan-400 font-bold">0 kW</span>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script>
+        const state = {
+            scene: null,
+            camera: null,
+            renderer: null,
+            controls: null,
+            objects: {
+                frame: null,
+                wheels: [],
+                motor: null,
+                battery: null,
+                energyItems: []
+            },
+            isSimulationRunning: false,
+            simSpeed: 0,
+            raycaster: new THREE.Raycaster(),
+            mouse: new THREE.Vector2(),
+            draggedType: null
+        };
+
+        const MOUNT_POINTS = {
+            wheel: [
+                { x: 1.5, y: 0, z: 1 }, { x: -1.5, y: 0, z: 1 },
+                { x: 1.5, y: 0, z: -1 }, { x: -1.5, y: 0, z: -1 }
+            ],
+            motor: [{ x: -1, y: 0.3, z: 0 }],
+            battery: [{ x: 0.5, y: 0.3, z: 0 }]
+        };
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const bg = type === 'error' ? 'bg-red-900/90' : 'bg-slate-800/90';
+            toast.className = `${bg} backdrop-blur text-white px-4 py-3 rounded-lg shadow-xl mb-2 flex items-center space-x-3 transform transition-all duration-300 translate-x-full border border-slate-600`;
+            toast.innerHTML = `<span class="text-sm">${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-x-full'), 10);
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function init() {
+            const container = document.getElementById('container');
+            state.scene = new THREE.Scene();
+            state.scene.background = new THREE.Color(0x0f172a);
+            state.scene.fog = new THREE.Fog(0x0f172a, 15, 60);
+
+            state.camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+            state.camera.position.set(10, 8, 12);
+
+            state.renderer = new THREE.WebGLRenderer({ antialias: true });
+            state.renderer.setSize(container.clientWidth, container.clientHeight);
+            state.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            state.renderer.shadowMap.enabled = true;
+            container.appendChild(state.renderer.domElement);
+
+            state.controls = new THREE.OrbitControls(state.camera, state.renderer.domElement);
+            state.controls.enableDamping = true;
+
+            state.scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+            const sun = new THREE.DirectionalLight(0xffffff, 0.8);
+            sun.position.set(10, 20, 10);
+            sun.castShadow = true;
+            state.scene.add(sun);
+
+            state.scene.add(new THREE.GridHelper(50, 50, 0x334155, 0x1e293b));
+            
+            const ground = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshPhongMaterial({ color: 0x0f172a }));
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            state.scene.add(ground);
+
+            animate();
+            document.getElementById('loading').style.display = 'none';
+            setupDragAndDrop();
+            setupEventListeners();
+        }
+
+        function createComponent(type) {
+            let mesh;
+            switch(type) {
+                case 'frame':
+                    mesh = new THREE.Group();
+                    const frameBase = new THREE.Mesh(new THREE.BoxGeometry(4, 0.3, 2), new THREE.MeshPhongMaterial({ color: 0x334155 }));
+                    frameBase.castShadow = true;
+                    mesh.add(frameBase);
+                    break;
+
+                case 'wheel':
+                    mesh = new THREE.Group();
+                    const tire = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.3, 24), new THREE.MeshStandardMaterial({ color: 0x111827 }));
+                    tire.rotation.x = Math.PI / 2;
+                    tire.castShadow = true;
+                    mesh.add(tire);
+                    const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.35, 12), new THREE.MeshPhongMaterial({ color: 0x94a3b8 }));
+                    rim.rotation.x = Math.PI / 2;
+                    mesh.add(rim);
+                    break;
+
+                case 'motor':
+                    mesh = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.8, 16), new THREE.MeshPhongMaterial({ color: 0xea580c }));
+                    mesh.rotation.z = Math.PI / 2;
+                    break;
+
+                case 'battery':
+                    mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 0.4, 1.2), new THREE.MeshPhongMaterial({ color: 0x9333ea }));
+                    break;
+
+                case 'wind_turbine':
+                    mesh = new THREE.Group();
+                    const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.15, 6), new THREE.MeshPhongMaterial({ color: 0xf8fafc }));
+                    pole.position.y = 3;
+                    mesh.add(pole);
+                    const head = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.8), new THREE.MeshPhongMaterial({ color: 0xf1f5f9 }));
+                    head.position.y = 6;
+                    mesh.add(head);
+                    const blades = new THREE.Group();
+                    blades.position.set(0, 6, 0.5);
+                    for(let i=0; i<3; i++) {
+                        const bladePivot = new THREE.Group();
+                        bladePivot.rotation.z = (i * Math.PI * 2) / 3;
+                        
+                        const bladeGeo = new THREE.BoxGeometry(0.2, 2.5, 0.05);
+                        const bladeMat = new THREE.MeshPhongMaterial({ color: 0xffffff });
+                        const blade = new THREE.Mesh(bladeGeo, bladeMat);
+                        
+                        blade.position.y = 1.2;
+                        // ADDING AERODYNAMIC PITCH: Rotate on Y axis to angle the blade
+                        blade.rotation.y = 0.45; 
+                        
+                        bladePivot.add(blade);
+                        blades.add(bladePivot);
+                    }
+                    mesh.add(blades);
+                    mesh.userData.isTurbine = true;
+                    mesh.userData.blades = blades;
+                    break;
+
+                case 'solar_panel':
+                    mesh = new THREE.Group();
+                    const stand = new THREE.Mesh(new THREE.BoxGeometry(0.2, 1, 0.2), new THREE.MeshPhongMaterial({ color: 0x475569 }));
+                    stand.position.y = 0.5;
+                    mesh.add(stand);
+                    const panel = new THREE.Mesh(new THREE.BoxGeometry(2, 0.1, 1.5), new THREE.MeshPhongMaterial({ color: 0x1e3a8a }));
+                    panel.position.y = 1;
+                    panel.rotation.x = Math.PI / 6;
+                    mesh.add(panel);
+                    const grid = new THREE.GridHelper(2, 4, 0x3b82f6, 0x3b82f6);
+                    grid.position.y = 1.06;
+                    grid.rotation.x = Math.PI / 6;
+                    mesh.add(grid);
+                    break;
+            }
+            mesh.userData.type = type;
+            return mesh;
+        }
+
+        function setupDragAndDrop() {
+            const container = document.getElementById('container');
+            document.querySelectorAll('[draggable="true"]').forEach(el => {
+                el.addEventListener('dragstart', (e) => {
+                    state.draggedType = e.target.closest('[data-type]').dataset.type;
+                    container.classList.add('drop-target-active');
+                });
+                el.addEventListener('dragend', () => container.classList.remove('drop-target-active'));
+            });
+
+            container.addEventListener('dragover', (e) => e.preventDefault());
+            container.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const rect = container.getBoundingClientRect();
+                state.mouse.x = ((e.clientX - rect.left) / container.clientWidth) * 2 - 1;
+                state.mouse.y = -((e.clientY - rect.top) / container.clientHeight) * 2 + 1;
+                state.raycaster.setFromCamera(state.mouse, state.camera);
+                const intersects = state.raycaster.intersectObjects(state.scene.children, true);
+                if (intersects.length > 0) handleDrop(state.draggedType, intersects[0].point);
+            });
+        }
+
+        function handleDrop(type, point) {
+            const isEnergy = (type === 'wind_turbine' || type === 'solar_panel');
+            
+            if (!isEnergy && type !== 'frame' && !state.objects.frame) {
+                showToast("Place the Chassis Frame first!", "error");
+                return;
+            }
+
+            const mesh = createComponent(type);
+            let success = false;
+
+            if (isEnergy) {
+                mesh.position.copy(point);
+                mesh.position.y = 0;
+                state.scene.add(mesh);
+                state.objects.energyItems.push(mesh);
+                success = true;
+            } else if (type === 'frame') {
+                if (state.objects.frame) { showToast("Frame already exists"); return; }
+                mesh.position.set(0, 0.4, 0);
+                state.scene.add(mesh);
+                state.objects.frame = mesh;
+                success = true;
+            } else {
+                const points = MOUNT_POINTS[type];
+                for (const p of points) {
+                    const worldP = new THREE.Vector3(p.x, p.y, p.z).add(state.objects.frame.position);
+                    if (point.distanceTo(worldP) < 1.8) {
+                        mesh.position.set(p.x, p.y, p.z);
+                        state.objects.frame.add(mesh);
+                        if (type === 'wheel') state.objects.wheels.push(mesh);
+                        else state.objects[type] = mesh;
+                        success = true;
+                        break;
+                    }
+                }
+            }
+
+            if (success) updateUI();
+            else if (!isEnergy) showToast("Drop near valid car mount points", "error");
+        }
+
+        function updateUI() {
+            const energyPower = state.objects.energyItems.length * 5.2;
+            document.getElementById('powerValue').innerText = `${energyPower.toFixed(1)} kW`;
+        }
+
+        function setupEventListeners() {
+            window.addEventListener('resize', () => {
+                const c = document.getElementById('container');
+                state.camera.aspect = c.clientWidth / c.clientHeight;
+                state.camera.updateProjectionMatrix();
+                state.renderer.setSize(c.clientWidth, c.clientHeight);
+            });
+
+            document.getElementById('runBtn').addEventListener('click', () => {
+                state.isSimulationRunning = !state.isSimulationRunning;
+                const btn = document.getElementById('runBtn');
+                btn.innerHTML = state.isSimulationRunning ? '<span>Stop Test</span>' : '<span>Run Simulation</span>';
+                btn.classList.toggle('bg-blue-600');
+                btn.classList.toggle('bg-red-600');
+                
+                if (state.isSimulationRunning) {
+                    showToast("Simulation running...");
+                }
+            });
+
+            document.getElementById('resetBtn').addEventListener('click', () => {
+                location.reload(); 
+            });
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (state.controls) state.controls.update();
+
+            // Turbine rotation logic: ONLY rotate when simulation is running
+            const turbineSpeed = state.isSimulationRunning ? 0.2 : 0;
+            state.objects.energyItems.forEach(item => {
+                if (item.userData.isTurbine) {
+                    item.userData.blades.rotation.z += turbineSpeed;
+                }
+            });
+
+            if (state.isSimulationRunning) {
+                // Vehicle simulation logic
+                if (state.objects.frame && state.objects.wheels.length >= 2) {
+                    state.simSpeed = Math.min(state.simSpeed + 0.005, 0.15);
+                    state.objects.frame.position.x += state.simSpeed;
+                    state.objects.wheels.forEach(w => w.children[0].rotation.y += state.simSpeed * 2.5);
+                    if (state.objects.frame.position.x > 20) state.objects.frame.position.x = -20;
+                }
+            } else {
+                state.simSpeed = 0;
+            }
+
+            state.renderer.render(state.scene, state.camera);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
