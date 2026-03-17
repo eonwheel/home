@@ -16,6 +16,7 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        .price-tag { background: rgba(16, 185, 129, 0.1); color: #10b981; }
     </style>
 </head>
 <body>
@@ -44,7 +45,7 @@
 
         <div class="flex-1 flex overflow-hidden">
             <!-- Left Side Pane -->
-            <aside class="w-72 bg-slate-900/95 backdrop-blur-md border-r border-slate-700 p-4 pointer-events-auto flex flex-col">
+            <aside class="w-80 bg-slate-900/95 backdrop-blur-md border-r border-slate-700 p-4 pointer-events-auto flex flex-col">
                 
                 <div class="flex-1 overflow-y-auto pr-2 custom-scrollbar">
                     <!-- CAR GROUP -->
@@ -57,17 +58,64 @@
                         </div>
                         
                         <div class="space-y-2">
-                            <div draggable="true" data-type="frame" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-blue-500 transition">
-                                <p class="font-medium text-[13px]">Main Chassis Frame</p>
+                            <div draggable="true" data-type="frame" data-name="Chassis Frame" data-price="250" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-blue-500 transition relative">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="font-medium text-[13px]">Main Chassis Frame</p>
+                                        <p class="text-[10px] text-slate-500">$250.00</p>
+                                    </div>
+                                    <button onclick="addToCart('frame', null, 250, 'Main Chassis Frame')" class="p-1 bg-blue-600 hover:bg-blue-500 rounded text-white transition pointer-events-auto">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                    </button>
+                                </div>
                             </div>
-                            <div draggable="true" data-type="wheel" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-emerald-500 transition">
-                                <p class="font-medium text-[13px]">Traction Wheel</p>
+                            
+                            <div draggable="true" data-type="wheel" data-subtype="apex" data-name="Apex Slim Wheel" data-price="45" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-emerald-500 transition">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="font-medium text-[13px]">Apex Slim Wheel</p>
+                                        <p class="text-[10px] text-emerald-400 font-bold">$45.00</p>
+                                    </div>
+                                    <button onclick="addToCart('wheel', 'apex', 45, 'Apex Slim Wheel')" class="p-1 bg-blue-600 hover:bg-blue-500 rounded text-white transition pointer-events-auto">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                    </button>
+                                </div>
                             </div>
-                            <div draggable="true" data-type="motor" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-orange-500 transition">
-                                <p class="font-medium text-[13px]">Brushless Motor</p>
+
+                            <div draggable="true" data-type="wheel" data-subtype="titan" data-name="Titan Heavy Wheel" data-price="85" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-emerald-500 transition">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="font-medium text-[13px]">Titan Heavy Wheel</p>
+                                        <p class="text-[10px] text-emerald-400 font-bold">$85.00</p>
+                                    </div>
+                                    <button onclick="addToCart('wheel', 'titan', 85, 'Titan Heavy Wheel')" class="p-1 bg-blue-600 hover:bg-blue-500 rounded text-white transition pointer-events-auto">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                    </button>
+                                </div>
                             </div>
-                            <div draggable="true" data-type="battery" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-purple-500 transition">
-                                <p class="font-medium text-[13px]">Lithium Battery</p>
+
+                            <div draggable="true" data-type="motor" data-name="Brushless Motor" data-price="120" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-orange-500 transition">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="font-medium text-[13px]">Brushless Motor</p>
+                                        <p class="text-[10px] text-slate-500">$120.00</p>
+                                    </div>
+                                    <button onclick="addToCart('motor', null, 120, 'Brushless Motor')" class="p-1 bg-blue-600 hover:bg-blue-500 rounded text-white transition pointer-events-auto">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div draggable="true" data-type="battery" data-name="Lithium Battery" data-price="350" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-purple-500 transition">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="font-medium text-[13px]">Lithium Battery</p>
+                                        <p class="text-[10px] text-slate-500">$350.00</p>
+                                    </div>
+                                    <button onclick="addToCart('battery', null, 350, 'Lithium Battery')" class="p-1 bg-blue-600 hover:bg-blue-500 rounded text-white transition pointer-events-auto">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -82,19 +130,85 @@
                         </div>
                         
                         <div class="space-y-2">
-                            <div draggable="true" data-type="wind_turbine" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-cyan-500 transition">
-                                <p class="font-medium text-[13px]">Wind Turbine</p>
+                            <!-- Wind Turbines -->
+                            <div draggable="true" data-type="wind_turbine" data-subtype="eco" data-name="EcoWind V1" data-price="1200" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-cyan-500 transition">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="font-medium text-[13px]">EcoWind V1</p>
+                                        <p class="text-[10px] text-cyan-400 font-bold">$1,200.00</p>
+                                    </div>
+                                    <button onclick="addToCart('wind_turbine', 'eco', 1200, 'EcoWind V1')" class="p-1 bg-blue-600 hover:bg-blue-500 rounded text-white transition pointer-events-auto">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                    </button>
+                                </div>
                             </div>
-                            <div draggable="true" data-type="solar_panel" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-yellow-500 transition">
-                                <p class="font-medium text-[13px]">Solar Array</p>
+                            <div draggable="true" data-type="wind_turbine" data-subtype="storm" data-name="StormForce X" data-price="2800" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-cyan-500 transition">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="font-medium text-[13px]">StormForce X</p>
+                                        <p class="text-[10px] text-cyan-400 font-bold">$2,800.00</p>
+                                    </div>
+                                    <button onclick="addToCart('wind_turbine', 'storm', 2800, 'StormForce X')" class="p-1 bg-blue-600 hover:bg-blue-500 rounded text-white transition pointer-events-auto">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Solar Panels -->
+                            <div draggable="true" data-type="solar_panel" data-subtype="mono" data-name="SunRay Mono" data-price="450" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-yellow-500 transition">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <div class="flex items-center space-x-1">
+                                            <p class="font-medium text-[13px]">SunRay Mono</p>
+                                            <span class="text-[8px] px-1 bg-slate-700 text-slate-400 rounded">Heliotex</span>
+                                        </div>
+                                        <p class="text-[10px] text-yellow-500 font-bold">$450.00</p>
+                                    </div>
+                                    <button onclick="addToCart('solar_panel', 'mono', 450, 'SunRay Mono')" class="p-1 bg-blue-600 hover:bg-blue-500 rounded text-white transition pointer-events-auto">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div draggable="true" data-type="solar_panel" data-subtype="thin" data-name="ThinFilm Flex" data-price="680" class="component-card cursor-grab active:cursor-grabbing bg-slate-800/50 p-2 rounded-lg border border-slate-700 hover:border-yellow-500 transition">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <div class="flex items-center space-x-1">
+                                            <p class="font-medium text-[13px]">ThinFilm Flex</p>
+                                            <span class="text-[8px] px-1 bg-slate-700 text-slate-400 rounded">Voltia</span>
+                                        </div>
+                                        <p class="text-[10px] text-yellow-500 font-bold">$680.00</p>
+                                    </div>
+                                    <button onclick="addToCart('solar_panel', 'thin', 680, 'ThinFilm Flex')" class="p-1 bg-blue-600 hover:bg-blue-500 rounded text-white transition pointer-events-auto">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </section>
                 </div>
 
-                <div class="mt-auto pt-4 border-t border-slate-700">
-                    <p class="text-[10px] text-slate-500 uppercase tracking-tighter">Pro Tip</p>
-                    <p class="text-xs text-slate-400 mt-1 italic">Simulation can be run with any components present on the grid.</p>
+                <!-- SHOPPING CART SECTION -->
+                <div class="mt-4 pt-4 border-t border-slate-700 flex flex-col h-56 bg-slate-900/50 -mx-4 px-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <h2 class="text-xs font-bold text-slate-300 uppercase tracking-widest flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            Your Cart
+                        </h2>
+                        <span id="cartCount" class="bg-blue-600 text-[10px] font-bold px-1.5 py-0.5 rounded-full">0</span>
+                    </div>
+                    
+                    <div id="cartList" class="flex-1 overflow-y-auto space-y-2 custom-scrollbar text-[11px] text-slate-400">
+                        <p class="italic">No items added.</p>
+                    </div>
+
+                    <div class="mt-2 pt-2 border-t border-slate-700">
+                        <div class="flex justify-between text-xs font-bold mb-2">
+                            <span>Total:</span>
+                            <span id="cartTotal" class="text-emerald-400 font-mono">$0.00</span>
+                        </div>
+                        <button class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-1.5 rounded font-bold text-xs transition">
+                            Checkout
+                        </button>
+                    </div>
                 </div>
             </aside>
 
@@ -108,10 +222,17 @@
                 </div>
                 
                 <!-- Assembly Stats Overlay -->
-                <div class="absolute top-4 left-4 bg-slate-900/60 backdrop-blur-sm p-3 rounded-lg border border-slate-700 text-xs text-slate-300">
-                    <div class="flex justify-between space-x-8">
+                <div class="absolute top-4 left-4 bg-slate-900/60 backdrop-blur-sm p-3 rounded-lg border border-slate-700 text-xs text-slate-300 min-w-[200px]">
+                    <div class="flex justify-between space-x-8 mb-2">
                         <span>Total Power Output:</span>
                         <span id="powerValue" class="text-cyan-400 font-bold">0 kW</span>
+                    </div>
+                    <div class="border-t border-slate-700 pt-2 flex flex-col space-y-2">
+                        <p class="text-[10px] uppercase text-slate-500 font-bold tracking-tight">Project Budgeting</p>
+                        <button id="syncCartBtn" class="w-full bg-slate-800 hover:bg-slate-700 text-white py-1.5 rounded border border-slate-600 transition flex items-center justify-center space-x-2">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                            <span>Add Scene to Cart</span>
+                        </button>
                     </div>
                 </div>
             </main>
@@ -137,7 +258,9 @@
             simSpeed: 0,
             raycaster: new THREE.Raycaster(),
             mouse: new THREE.Vector2(),
-            draggedType: null
+            draggedType: null,
+            draggedSubtype: null,
+            cart: []
         };
 
         const MOUNT_POINTS = {
@@ -153,7 +276,7 @@
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             const bg = type === 'error' ? 'bg-red-900/90' : 'bg-slate-800/90';
-            toast.className = `${bg} backdrop-blur text-white px-4 py-3 rounded-lg shadow-xl mb-2 flex items-center space-x-3 transform transition-all duration-300 translate-x-full border border-slate-600`;
+            toast.className = `${bg} backdrop-blur text-white px-4 py-3 rounded-lg shadow-xl mb-2 flex items-center space-x-3 transform transition-all duration-300 translate-x-full border border-slate-600 pointer-events-auto`;
             toast.innerHTML = `<span class="text-sm">${message}</span>`;
             container.appendChild(toast);
             setTimeout(() => toast.classList.remove('translate-x-full'), 10);
@@ -161,6 +284,91 @@
                 toast.classList.add('translate-x-full');
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
+        }
+
+        function addToCart(type, subtype, price, name, silent = false) {
+            const existing = state.cart.find(item => item.type === type && item.subtype === subtype);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                state.cart.push({ type, subtype, price, name, quantity: 1 });
+            }
+            if (!silent) showToast(`${name} added to cart!`);
+            renderCart();
+        }
+
+        function syncAssemblyToCart() {
+            let addedCount = 0;
+            const itemsToSync = [];
+
+            // Collect all items currently in the 3D scene
+            if (state.objects.frame) itemsToSync.push(state.objects.frame.userData);
+            state.objects.wheels.forEach(w => itemsToSync.push(w.userData));
+            if (state.objects.motor) itemsToSync.push(state.objects.motor.userData);
+            if (state.objects.battery) itemsToSync.push(state.objects.battery.userData);
+            state.objects.energyItems.forEach(item => itemsToSync.push(item.userData));
+
+            if (itemsToSync.length === 0) {
+                showToast("No components in the scene to sync.", "error");
+                return;
+            }
+
+            itemsToSync.forEach(data => {
+                addToCart(data.type, data.subtype, data.price, data.name, true);
+                addedCount++;
+            });
+
+            showToast(`Synced ${addedCount} components from scene to cart.`);
+        }
+
+        function removeFromCart(type, subtype) {
+            const index = state.cart.findIndex(item => item.type === type && item.subtype === subtype);
+            if (index > -1) {
+                if (state.cart[index].quantity > 1) {
+                    state.cart[index].quantity -= 1;
+                } else {
+                    state.cart.splice(index, 1);
+                }
+                renderCart();
+            }
+        }
+
+        function renderCart() {
+            const list = document.getElementById('cartList');
+            const totalEl = document.getElementById('cartTotal');
+            const countEl = document.getElementById('cartCount');
+            
+            if (state.cart.length === 0) {
+                list.innerHTML = '<p class="italic">No items added.</p>';
+                totalEl.innerText = '$0.00';
+                countEl.innerText = '0';
+                return;
+            }
+
+            let total = 0;
+            let itemsCount = 0;
+            list.innerHTML = state.cart.map(item => {
+                total += item.price * item.quantity;
+                itemsCount += item.quantity;
+                return `
+                    <div class="flex justify-between items-center group">
+                        <div class="flex flex-col truncate pr-2">
+                            <span class="truncate font-medium text-slate-200">${item.name}</span>
+                            <span class="text-[9px] text-slate-500">Qty: ${item.quantity} × $${item.price.toLocaleString()}</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-emerald-500 font-mono font-semibold">$${(item.price * item.quantity).toLocaleString()}</span>
+                            <button onclick="removeFromCart('${item.type}', ${item.subtype ? `'${item.subtype}'` : 'null'})" 
+                                    class="text-slate-500 hover:text-red-400 p-0.5 transition-colors">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            totalEl.innerText = `$${total.toLocaleString()}`;
+            countEl.innerText = itemsCount;
         }
 
         function init() {
@@ -200,81 +408,103 @@
             setupEventListeners();
         }
 
-        function createComponent(type) {
+        function createComponent(type, subtype) {
             let mesh;
+            let meta = { type, subtype, price: 0, name: "" };
+
             switch(type) {
                 case 'frame':
                     mesh = new THREE.Group();
                     const frameBase = new THREE.Mesh(new THREE.BoxGeometry(4, 0.3, 2), new THREE.MeshPhongMaterial({ color: 0x334155 }));
                     frameBase.castShadow = true;
                     mesh.add(frameBase);
+                    meta.price = 250;
+                    meta.name = "Chassis Frame";
                     break;
 
                 case 'wheel':
+                    const radius = subtype === 'titan' ? 0.75 : 0.5;
+                    const width = subtype === 'titan' ? 0.5 : 0.3;
                     mesh = new THREE.Group();
-                    const tire = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.3, 24), new THREE.MeshStandardMaterial({ color: 0x111827 }));
+                    const tire = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, width, 24), new THREE.MeshStandardMaterial({ color: 0x111827 }));
                     tire.rotation.x = Math.PI / 2;
                     tire.castShadow = true;
                     mesh.add(tire);
-                    const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.35, 12), new THREE.MeshPhongMaterial({ color: 0x94a3b8 }));
+                    const rimRadius = radius * 0.6;
+                    const rim = new THREE.Mesh(new THREE.CylinderGeometry(rimRadius, rimRadius, width + 0.05, 12), new THREE.MeshPhongMaterial({ color: 0x94a3b8 }));
                     rim.rotation.x = Math.PI / 2;
                     mesh.add(rim);
+                    mesh.userData.radius = radius;
+                    meta.price = subtype === 'titan' ? 85 : 45;
+                    meta.name = subtype === 'titan' ? "Titan Heavy Wheel" : "Apex Slim Wheel";
                     break;
 
                 case 'motor':
                     mesh = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.8, 16), new THREE.MeshPhongMaterial({ color: 0xea580c }));
                     mesh.rotation.z = Math.PI / 2;
+                    meta.price = 120;
+                    meta.name = "Brushless Motor";
                     break;
 
                 case 'battery':
                     mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 0.4, 1.2), new THREE.MeshPhongMaterial({ color: 0x9333ea }));
+                    meta.price = 350;
+                    meta.name = "Lithium Battery";
                     break;
 
                 case 'wind_turbine':
+                    const h = subtype === 'storm' ? 9.5 : 6;
+                    const bladeLen = subtype === 'storm' ? 4.5 : 2.5;
+                    const pwr = subtype === 'storm' ? 12.0 : 5.2;
                     mesh = new THREE.Group();
-                    const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.15, 6), new THREE.MeshPhongMaterial({ color: 0xf8fafc }));
-                    pole.position.y = 3;
+                    const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.2, h), new THREE.MeshPhongMaterial({ color: 0xf8fafc }));
+                    pole.position.y = h / 2;
                     mesh.add(pole);
-                    const head = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.8), new THREE.MeshPhongMaterial({ color: 0xf1f5f9 }));
-                    head.position.y = 6;
+                    const head = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.6, 1.0), new THREE.MeshPhongMaterial({ color: 0xf1f5f9 }));
+                    head.position.y = h;
                     mesh.add(head);
                     const blades = new THREE.Group();
-                    blades.position.set(0, 6, 0.5);
+                    blades.position.set(0, h, 0.6);
                     for(let i=0; i<3; i++) {
                         const bladePivot = new THREE.Group();
                         bladePivot.rotation.z = (i * Math.PI * 2) / 3;
-                        
-                        const bladeGeo = new THREE.BoxGeometry(0.2, 2.5, 0.05);
-                        const bladeMat = new THREE.MeshPhongMaterial({ color: 0xffffff });
-                        const blade = new THREE.Mesh(bladeGeo, bladeMat);
-                        
-                        blade.position.y = 1.2;
+                        const blade = new THREE.Mesh(new THREE.BoxGeometry(0.2, bladeLen, 0.05), new THREE.MeshPhongMaterial({ color: 0xffffff }));
+                        blade.position.y = bladeLen / 2;
                         blade.rotation.y = 0.45; 
-                        
                         bladePivot.add(blade);
                         blades.add(bladePivot);
                     }
                     mesh.add(blades);
                     mesh.userData.isTurbine = true;
                     mesh.userData.blades = blades;
+                    mesh.userData.power = pwr;
+                    meta.price = subtype === 'storm' ? 2800 : 1200;
+                    meta.name = subtype === 'storm' ? "StormForce X" : "EcoWind V1";
                     break;
 
                 case 'solar_panel':
+                    const sW = subtype === 'thin' ? 3.5 : 2.0;
+                    const sH = subtype === 'thin' ? 0.8 : 1.5;
                     mesh = new THREE.Group();
                     const stand = new THREE.Mesh(new THREE.BoxGeometry(0.2, 1, 0.2), new THREE.MeshPhongMaterial({ color: 0x475569 }));
                     stand.position.y = 0.5;
                     mesh.add(stand);
-                    const panel = new THREE.Mesh(new THREE.BoxGeometry(2, 0.1, 1.5), new THREE.MeshPhongMaterial({ color: 0x1e3a8a }));
+                    const panel = new THREE.Mesh(new THREE.BoxGeometry(sW, 0.1, sH), new THREE.MeshPhongMaterial({ color: 0x1e3a8a }));
                     panel.position.y = 1;
                     panel.rotation.x = Math.PI / 6;
                     mesh.add(panel);
-                    const grid = new THREE.GridHelper(2, 4, 0x3b82f6, 0x3b82f6);
+                    const grid = new THREE.GridHelper(sW, 4, 0x3b82f6, 0x3b82f6);
                     grid.position.y = 1.06;
                     grid.rotation.x = Math.PI / 6;
                     mesh.add(grid);
+                    mesh.userData.power = (sW * sH) * 1.5;
+                    meta.price = subtype === 'thin' ? 680 : 450;
+                    meta.name = subtype === 'thin' ? "ThinFilm Flex" : "SunRay Mono";
                     break;
             }
-            mesh.userData.type = type;
+            
+            // Apply common metadata
+            Object.assign(mesh.userData, meta);
             return mesh;
         }
 
@@ -282,7 +512,9 @@
             const container = document.getElementById('container');
             document.querySelectorAll('[draggable="true"]').forEach(el => {
                 el.addEventListener('dragstart', (e) => {
-                    state.draggedType = e.target.closest('[data-type]').dataset.type;
+                    const dataset = e.target.closest('[data-type]').dataset;
+                    state.draggedType = dataset.type;
+                    state.draggedSubtype = dataset.subtype || null;
                     container.classList.add('drop-target-active');
                 });
                 el.addEventListener('dragend', () => container.classList.remove('drop-target-active'));
@@ -296,19 +528,18 @@
                 state.mouse.y = -((e.clientY - rect.top) / container.clientHeight) * 2 + 1;
                 state.raycaster.setFromCamera(state.mouse, state.camera);
                 const intersects = state.raycaster.intersectObjects(state.scene.children, true);
-                if (intersects.length > 0) handleDrop(state.draggedType, intersects[0].point);
+                if (intersects.length > 0) handleDrop(state.draggedType, state.draggedSubtype, intersects[0].point);
             });
         }
 
-        function handleDrop(type, point) {
+        function handleDrop(type, subtype, point) {
             const isEnergy = (type === 'wind_turbine' || type === 'solar_panel');
-            
             if (!isEnergy && type !== 'frame' && !state.objects.frame) {
                 showToast("Place the Chassis Frame first!", "error");
                 return;
             }
 
-            const mesh = createComponent(type);
+            const mesh = createComponent(type, subtype);
             let success = false;
 
             if (isEnergy) {
@@ -343,8 +574,9 @@
         }
 
         function updateUI() {
-            const energyPower = state.objects.energyItems.length * 5.2;
-            document.getElementById('powerValue').innerText = `${energyPower.toFixed(1)} kW`;
+            let totalPower = 0;
+            state.objects.energyItems.forEach(item => totalPower += item.userData.power || 0);
+            document.getElementById('powerValue').innerText = `${totalPower.toFixed(1)} kW`;
         }
 
         function setupEventListeners() {
@@ -361,33 +593,34 @@
                 btn.innerHTML = state.isSimulationRunning ? '<span>Stop Test</span>' : '<span>Run Simulation</span>';
                 btn.classList.toggle('bg-blue-600');
                 btn.classList.toggle('bg-red-600');
-                
-                if (state.isSimulationRunning) {
-                    showToast("Simulation running...");
-                }
             });
 
-            document.getElementById('resetBtn').addEventListener('click', () => {
-                location.reload(); 
-            });
+            document.getElementById('resetBtn').addEventListener('click', () => location.reload());
+
+            document.getElementById('syncCartBtn').addEventListener('click', () => syncAssemblyToCart());
         }
 
         function animate() {
             requestAnimationFrame(animate);
             if (state.controls) state.controls.update();
 
-            const turbineSpeed = state.isSimulationRunning ? 0.2 : 0;
+            const simRunning = state.isSimulationRunning;
             state.objects.energyItems.forEach(item => {
                 if (item.userData.isTurbine) {
-                    item.userData.blades.rotation.z += turbineSpeed;
+                    const speed = simRunning ? (item.userData.subtype === 'storm' ? 0.3 : 0.2) : 0;
+                    item.userData.blades.rotation.z += speed;
                 }
             });
 
-            if (state.isSimulationRunning) {
+            if (simRunning) {
                 if (state.objects.frame && state.objects.wheels.length >= 2) {
                     state.simSpeed = Math.min(state.simSpeed + 0.005, 0.15);
                     state.objects.frame.position.x += state.simSpeed;
-                    state.objects.wheels.forEach(w => w.children[0].rotation.y += state.simSpeed * 2.5);
+                    state.objects.wheels.forEach(w => {
+                        const radius = w.userData.radius || 0.5;
+                        const angularVelocity = (state.simSpeed * 2.5) / (radius * 2);
+                        w.children[0].rotation.y += angularVelocity;
+                    });
                     if (state.objects.frame.position.x > 20) state.objects.frame.position.x = -20;
                 }
             } else {
