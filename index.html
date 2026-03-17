@@ -618,6 +618,11 @@
                 btn.disabled = !ready;
                 btn.className = ready ? "w-full mt-6 bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl font-bold text-sm transition-all shadow-lg" : "w-full mt-6 bg-slate-800 text-slate-500 py-3 rounded-xl font-bold text-sm cursor-not-allowed";
                 btn.innerText = ready ? "Launch Simulation" : "Incomplete Setup";
+                if (ready) {
+                    btn.onclick = () => window.location.href = 'sim.html';
+                } else {
+                    btn.onclick = null;
+                }
             }
         }
     </script>
