@@ -210,15 +210,19 @@
                 <p class="text-xl text-slate-400 max-w-2xl mx-auto mb-10">
                     Transforming complex engineering simulation into something as intuitive as playing with LEGO blocks to unlock the creative potential of billions, allowing them to build their way out of local problems.
                 </p>
-                <div class="flex flex-col sm:flex-row justify-center gap-4 mb-20">
-                    <button onclick="showPage('setup')" class="bg-white text-slate-950 px-8 py-4 rounded-xl font-bold text-lg hover:bg-slate-200 transition-all flex items-center justify-center gap-2">
-                        Setup Simulation <i data-lucide="chevron-right" class="w-5 h-5"></i>
+
+                <!-- Symmetrical Pixel-Centered Hero Buttons -->
+                <div class="flex flex-col items-center justify-center gap-4 mb-20 w-full">
+                    <button onclick="showPage('setup')" class="relative w-72 bg-white text-slate-950 py-4 px-6 rounded-xl font-bold text-lg hover:bg-slate-100 transition-all flex items-center shadow-2xl group">
+                        <i data-lucide="play" class="w-5 h-5 fill-current absolute left-8 group-hover:scale-110 transition-transform"></i>
+                        <span class="w-full text-center">Setup Simulation</span>
                     </button>
-                    <a href="#showreel" class="glass-card px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/10 transition-all flex items-center justify-center gap-2">
-                        <i data-lucide="play-circle" class="w-5 h-5"></i>Motivation
+                    <a href="#showreel" class="relative w-72 glass-card text-white py-4 px-6 rounded-xl font-bold text-lg hover:bg-white/10 transition-all flex items-center shadow-xl">
+                        <i data-lucide="video" class="w-5 h-5 text-blue-400 absolute left-8"></i>
+                        <span class="w-full text-center">Motivation Pitch</span>
                     </a>
                 </div>
-
+                
                 <!-- Centralized Image Carousel -->
                 <div class="relative max-w-5xl mx-auto" id="setup-preview">
                     <!-- Background Glow -->
